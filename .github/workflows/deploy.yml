@@ -84,6 +84,9 @@ jobs:
         username: ${{ secrets.DROPLET_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
+          # Create network if it doesn't exist
+          docker network create fingoose-network || true
+          
           # Pull latest image
           docker pull ${{ secrets.DOCKER_USERNAME }}/fingoose-api:latest
           
@@ -94,6 +97,7 @@ jobs:
           # Run new container
           docker run -d \
             --name fingoose-api \
+            --network=fingoose-network \
             -p 5000:5000 \
             -e DATABASE_URL=${{ secrets.PROD_DATABASE_URL }} \
             -e FLASK_ENV=production \
