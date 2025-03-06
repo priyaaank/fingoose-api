@@ -1,0 +1,25 @@
+personal_finance_api/
+├── app/
+│   ├── __init__.py
+│   ├── config.py
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── goal.py
+│   │   ├── asset.py
+│   │   ├── liability.py
+│   │   └── asset_goal_mapping.py
+│   ├── routes/
+│   │   ├── __init__.py
+│   │   ├── goal_routes.py
+│   │   ├── asset_routes.py
+│   │   ├── liability_routes.py
+│   │   └── mapping_routes.py
+│   └── database.py
+├── tests/
+│   ├── __init__.py
+│   ├── test_goals.py
+│   ├── test_assets.py
+│   ├── test_liabilities.py
+│   └── test_mappings.py
+├── requirements.txt
+└── run.py 
