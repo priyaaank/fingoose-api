@@ -87,6 +87,24 @@ jobs:
           # Create network if it doesn't exist
           docker network create fingoose-network || true
           
+          # Check if MySQL container exists and is running
+          if ! docker ps -q -f name=mysql; then
+            # Start MySQL container if it doesn't exist
+            docker run -d \
+              --name mysql \
+              --network=fingoose-network \
+              -e MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} \
+              -e MYSQL_DATABASE=personal_finance \
+              -e MYSQL_USER=${{ secrets.MYSQL_USER }} \
+              -e MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }} \
+              -v mysql_data:/var/lib/mysql \
+              mysql:8.0
+            
+            # Wait for MySQL to be ready
+            echo "Waiting for MySQL to be ready..."
+            sleep 30
+          fi
+          
           # Pull latest image
           docker pull ${{ secrets.DOCKER_USERNAME }}/fingoose-api:latest
           
@@ -99,6 +117,6 @@ jobs:
             --name fingoose-api \
             --network=fingoose-network \
             -p 5000:5000 \
-            -e DATABASE_URL=${{ secrets.PROD_DATABASE_URL }} \
+            -e DATABASE_URL="mysql+pymysql://${{ secrets.MYSQL_USER }}:${{ secrets.MYSQL_PASSWORD }}@mysql:3306/personal_finance" \
             -e FLASK_ENV=production \
             ${{ secrets.DOCKER_USERNAME }}/fingoose-api:latest 
