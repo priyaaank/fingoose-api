@@ -11,4 +11,8 @@ class Goal(db.Model):
     target_year = db.Column(db.Integer, nullable=False)
     expected_inflation = db.Column(db.Float, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow) 
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    # Relationship to mappings
+    mappings = db.relationship('AssetGoalMapping',
+                             cascade='all, delete-orphan',
+                             backref='goal') 

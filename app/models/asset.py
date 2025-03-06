@@ -12,4 +12,12 @@ class Asset(db.Model):
     maturity_year = db.Column(db.Integer)   # nullable
     additional_comments = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow) 
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    # Relationship to goals through mappings
+    goals = db.relationship('Goal', 
+                          secondary='asset_goal_mapping',
+                          backref=db.backref('assets', lazy='dynamic'),
+                          lazy='dynamic')
+    mappings = db.relationship('AssetGoalMapping',
+                             cascade='all, delete-orphan',
+                             backref='asset') 
