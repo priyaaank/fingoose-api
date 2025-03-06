@@ -3,7 +3,7 @@ from ..models.goal import Goal
 from ..database import db
 from datetime import datetime
 
-bp = Blueprint('goals', __name__, url_prefix='/api/goals')
+bp = Blueprint('goals', __name__, url_prefix='/api/goals', static_folder=None)
 
 @bp.route('/', methods=['POST'])
 def create_goal():

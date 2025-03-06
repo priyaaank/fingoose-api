@@ -3,7 +3,7 @@ from ..models.asset import Asset
 from ..database import db
 from datetime import datetime
 
-bp = Blueprint('assets', __name__, url_prefix='/api/assets')
+bp = Blueprint('assets', __name__, url_prefix='/api/assets', static_folder=None)
 
 @bp.route('/', methods=['POST'])
 def create_asset():

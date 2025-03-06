@@ -3,7 +3,7 @@ from ..models.liability import Liability
 from ..database import db
 from datetime import datetime
 
-bp = Blueprint('liabilities', __name__, url_prefix='/api/liabilities')
+bp = Blueprint('liabilities', __name__, url_prefix='/api/liabilities', static_folder=None)
 
 @bp.route('/', methods=['POST'])
 def create_liability():
