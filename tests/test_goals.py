@@ -28,7 +28,7 @@ def test_create_goal(client):
         'name': 'Retirement 2050',
         'target_amount': 1000000.0,
         'current_value': 100000.0,
-        'target_date': '2050-12-31',
+        'target_date': '2050-12',
         'expected_inflation': 3.0
     })
     
@@ -42,7 +42,7 @@ def test_get_goals(client):
         'name': 'College Fund',
         'target_amount': 500000.0,
         'current_value': 50000.0,
-        'target_date': '2030-08-31',
+        'target_date': '2030-08',
         'expected_inflation': 5.0
     })
     

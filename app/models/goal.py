@@ -7,7 +7,8 @@ class Goal(db.Model):
     name = db.Column(db.String(100), nullable=False)
     target_amount = db.Column(db.Float, nullable=False)
     current_value = db.Column(db.Float, nullable=False)
-    target_date = db.Column(db.Date, nullable=False)
+    target_month = db.Column(db.Integer, nullable=False)  # 1-12
+    target_year = db.Column(db.Integer, nullable=False)
     expected_inflation = db.Column(db.Float, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow) 
