@@ -2,6 +2,7 @@ from flask import Flask
 from .config import Config
 from .database import db
 from flask_cors import CORS
+from flask_migrate import Migrate
 from .routes.goal_routes import bp as goal_routes
 from .routes.asset_routes import bp as asset_routes
 from .routes.liability_routes import bp as liability_routes
@@ -20,6 +21,7 @@ def create_app(config_class=Config):
     
     # Initialize extensions
     db.init_app(app)
+    Migrate(app, db)
     
     # Register blueprints
     app.register_blueprint(goal_routes)
