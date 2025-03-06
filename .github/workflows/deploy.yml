@@ -115,8 +115,8 @@ jobs:
           # Run new container
           docker run -d \
             --name fingoose-api \
-            --network=fingoose-network \
+            --network fingoose-network \
             -p 5000:5000 \
             -e DATABASE_URL="mysql+pymysql://${{ secrets.MYSQL_USER }}:${{ secrets.MYSQL_PASSWORD }}@mysql:3306/personal_finance" \
             -e FLASK_ENV=production \
-            ${{ secrets.DOCKER_USERNAME }}/fingoose-api:latest 
+            ${{ secrets.DOCKER_USERNAME }}/fingoose-api:latest
