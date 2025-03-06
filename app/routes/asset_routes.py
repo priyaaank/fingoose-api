@@ -5,7 +5,7 @@ from datetime import datetime
 
 bp = Blueprint('assets', __name__, url_prefix='/api/assets', static_folder=None)
 
-@bp.route('/', methods=['POST'])
+@bp.route('', methods=['POST'])
 def create_asset():
     data = request.get_json()
     
@@ -27,7 +27,7 @@ def create_asset():
         'message': 'Asset created successfully'
     }), 201
 
-@bp.route('/', methods=['GET'])
+@bp.route('', methods=['GET'])
 def get_assets():
     assets = Asset.query.all()
     return jsonify([{

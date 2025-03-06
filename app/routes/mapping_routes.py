@@ -6,7 +6,7 @@ from ..database import db
 
 bp = Blueprint('mappings', __name__, url_prefix='/api/mappings', static_folder=None)
 
-@bp.route('/', methods=['POST'])
+@bp.route('', methods=['POST'])
 def create_mapping():
     data = request.get_json()
     
@@ -24,7 +24,7 @@ def create_mapping():
         'message': 'Mapping created successfully'
     }), 201
 
-@bp.route('/', methods=['GET'])
+@bp.route('', methods=['GET'])
 def get_mappings():
     mappings = AssetGoalMapping.query.all()
     return jsonify([{

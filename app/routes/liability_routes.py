@@ -5,7 +5,7 @@ from datetime import datetime
 
 bp = Blueprint('liabilities', __name__, url_prefix='/api/liabilities', static_folder=None)
 
-@bp.route('/', methods=['POST'])
+@bp.route('', methods=['POST'])
 def create_liability():
     data = request.get_json()
     
@@ -31,7 +31,7 @@ def create_liability():
         'message': 'Liability created successfully'
     }), 201
 
-@bp.route('/', methods=['GET'])
+@bp.route('', methods=['GET'])
 def get_liabilities():
     liabilities = Liability.query.all()
     return jsonify([{

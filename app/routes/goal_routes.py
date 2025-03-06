@@ -5,7 +5,7 @@ from datetime import datetime
 
 bp = Blueprint('goals', __name__, url_prefix='/api/goals', static_folder=None)
 
-@bp.route('/', methods=['POST'])
+@bp.route('', methods=['POST'])
 def create_goal():
     data = request.get_json()
     
@@ -26,7 +26,7 @@ def create_goal():
         'message': 'Goal created successfully'
     }), 201
 
-@bp.route('/', methods=['GET'])
+@bp.route('', methods=['GET'])
 def get_goals():
     goals = Goal.query.all()
     return jsonify([{

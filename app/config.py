@@ -12,6 +12,9 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'mysql+pymysql://root:password@localhost/personal_finance'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     WTF_CSRF_ENABLED = False  # Disable CSRF for API
+    JSON_SORT_KEYS = False
+    # Disable redirects for trailing slashes
+    APPLICATION_ROOT = '/api'
 
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
