@@ -8,7 +8,8 @@ class Asset(db.Model):
     icon = db.Column(db.String(200))
     current_value = db.Column(db.Float, nullable=False)
     projected_roi = db.Column(db.Float, nullable=False)
-    maturity_date = db.Column(db.Date)
+    maturity_month = db.Column(db.Integer)  # 1-12, nullable
+    maturity_year = db.Column(db.Integer)   # nullable
     additional_comments = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow) 
