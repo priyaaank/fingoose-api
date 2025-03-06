@@ -47,4 +47,11 @@ def get_liabilities():
         'total_tenure': liability.total_tenure,
         'start_date': liability.start_date.strftime('%Y-%m-%d'),
         'additional_comments': liability.additional_comments
-    } for liability in liabilities]) 
+    } for liability in liabilities])
+
+@bp.route('/<int:id>', methods=['DELETE'])
+def delete_liability(id):
+    liability = Liability.query.get_or_404(id)
+    db.session.delete(liability)
+    db.session.commit()
+    return jsonify({'message': 'Liability deleted successfully'}) 
