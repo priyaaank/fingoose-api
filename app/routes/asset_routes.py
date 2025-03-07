@@ -82,8 +82,8 @@ def create_asset():
         db.session.commit()
         
         return jsonify({
-            'id': asset.id,
-            'message': 'Asset created successfully'
+            'message': 'Asset created successfully',
+            'asset': asset.to_dict()
         }), 201
         
     except Exception as e:

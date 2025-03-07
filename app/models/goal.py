@@ -32,6 +32,14 @@ class Goal(db.Model, RoundingMixin):
 
     def to_dict(self):
         """Convert goal to dictionary with computed projected value"""
+        # Get asset mappings
+        asset_mappings = [{
+            'asset_id': mapping.asset_id,
+            'asset_name': mapping.asset.name,
+            'asset_type': mapping.asset.asset_type,
+            'allocation_percentage': mapping.allocation_percentage
+        } for mapping in self.mappings]
+        
         return {
             'id': self.id,
             'name': self.name,
@@ -41,6 +49,7 @@ class Goal(db.Model, RoundingMixin):
             'projected_inflation': self.projected_inflation,
             'initial_goal_value': self.round_amount(self.initial_goal_value),
             'projected_value': self.projected_value,
+            'asset_mappings': asset_mappings,
             'created_at': self.created_at.isoformat(),
             'updated_at': self.updated_at.isoformat()
         } 
