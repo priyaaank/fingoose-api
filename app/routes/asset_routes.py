@@ -53,16 +53,7 @@ def validate_goal_mappings(goal_mappings):
 @bp.route('/<int:id>', methods=['GET'])
 def get_asset(id):
     asset = Asset.query.get_or_404(id)
-    return jsonify({
-        'id': asset.id,
-        'type': asset.type,
-        'name': asset.name,
-        'icon': asset.icon,
-        'current_value': asset.current_value,
-        'projected_roi': asset.projected_roi,
-        'maturity_date': f"{asset.maturity_year}-{asset.maturity_month:02d}" if asset.maturity_month and asset.maturity_year else None,
-        'additional_comments': asset.additional_comments
-    })
+    return jsonify(asset.to_dict())
 
 @bp.route('', methods=['POST'])
 def create_asset():

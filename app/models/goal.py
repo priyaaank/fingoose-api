@@ -1,8 +1,9 @@
 from datetime import datetime
 from ..database import db
 import math
+from .utils import RoundingMixin
 
-class Goal(db.Model):
+class Goal(db.Model, RoundingMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     icon = db.Column(db.String(10, collation='utf8mb4_unicode_ci'), nullable=False)  # For emoji
@@ -26,7 +27,8 @@ class Goal(db.Model):
         years = self.target_year - self.goal_creation_year
         # Convert percentage to decimal
         rate = self.projected_inflation / 100
-        return self.initial_goal_value * math.pow(1 + rate, years)
+        value = self.initial_goal_value * math.pow(1 + rate, years)
+        return self.round_amount(value)
 
     def to_dict(self):
         """Convert goal to dictionary with computed projected value"""
@@ -37,7 +39,7 @@ class Goal(db.Model):
             'goal_creation_year': self.goal_creation_year,
             'target_year': self.target_year,
             'projected_inflation': self.projected_inflation,
-            'initial_goal_value': self.initial_goal_value,
+            'initial_goal_value': self.round_amount(self.initial_goal_value),
             'projected_value': self.projected_value,
             'created_at': self.created_at.isoformat(),
             'updated_at': self.updated_at.isoformat()
