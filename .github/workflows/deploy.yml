@@ -119,6 +119,7 @@ jobs:
             --name fingoose-api \
             --network fingoose-network \
             -p 5000:5000 \
-            -e DATABASE_URL="mysql+pymysql://${{ secrets.MYSQL_USER }}:${{ secrets.MYSQL_PASSWORD }}@mysql:3306/personal_finance" \
+            -e DATABASE_URL="mysql+pymysql://${{ secrets.MYSQL_USER }}:\
+               ${{ secrets.MYSQL_PASSWORD }}@mysql:3306/personal_finance?charset=utf8mb4" \
             -e FLASK_ENV=production \
             ${{ secrets.DOCKER_USERNAME }}/fingoose-api:latest

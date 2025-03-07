@@ -20,6 +20,9 @@ COPY . .
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
+# Install netcat for MySQL health check
+RUN apt-get update && apt-get install -y netcat-openbsd
+
 # Expose port
 EXPOSE 5000
 
