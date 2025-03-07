@@ -16,8 +16,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
+# Create a startup script
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
 # Expose port
 EXPOSE 5000
 
-# Run migrations and start application
-CMD gunicorn --bind 0.0.0.0:5000 wsgi:app 
+CMD ["/start.sh"] 
