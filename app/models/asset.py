@@ -6,6 +6,7 @@ class Asset(db.Model, RoundingMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     icon = db.Column(db.String(10, collation='utf8mb4_unicode_ci'), nullable=False)  # For emoji
+    asset_type = db.Column(db.String(50), nullable=False)  # e.g., "Mutual Fund", "Fixed Deposit", etc.
     current_value = db.Column(db.Float, nullable=False)
     projected_roi = db.Column(db.Float, nullable=False)
     maturity_year = db.Column(db.Integer, nullable=False)
@@ -34,6 +35,7 @@ class Asset(db.Model, RoundingMixin):
             'id': self.id,
             'name': self.name,
             'icon': self.icon,
+            'asset_type': self.asset_type,
             'current_value': self.round_amount(self.current_value),
             'projected_roi': self.projected_roi,
             'maturity_year': self.maturity_year,

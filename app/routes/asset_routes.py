@@ -51,6 +51,7 @@ def create_asset():
         asset = Asset(
             name=data['name'],
             icon=data.get('icon'),
+            asset_type=data['asset_type'],
             current_value=data['current_value'],
             projected_roi=data['projected_roi'],
             maturity_year=data['maturity_year'],
@@ -105,6 +106,8 @@ def update_asset(id):
             asset.name = data['name']
         if 'icon' in data:
             asset.icon = data['icon']
+        if 'asset_type' in data:
+            asset.asset_type = data['asset_type']
         if 'current_value' in data:
             asset.current_value = data['current_value']
         if 'projected_roi' in data:
