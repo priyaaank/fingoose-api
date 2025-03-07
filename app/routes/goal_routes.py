@@ -1,38 +1,32 @@
 from flask import Blueprint, request, jsonify
 from ..models.goal import Goal
 from ..database import db
-import re
+from datetime import datetime
+import math
 
 bp = Blueprint('goals', __name__, url_prefix='/api/goals', static_folder=None)
 
-def parse_month_year(date_str):
-    """Parse date string in format 'YYYY-MM' and return month and year"""
-    pattern = r'^(\d{4})-(\d{2})$'
-    match = re.match(pattern, date_str)
-    if not match:
-        raise ValueError("Date must be in format 'YYYY-MM'")
-    year, month = map(int, match.groups())
-    if month < 1 or month > 12:
-        raise ValueError("Month must be between 1 and 12")
-    return month, year
+def calculate_projected_value(initial_value, inflation_rate, creation_year, target_year):
+    """
+    Calculate projected value using compound interest formula
+    Using July (month 7) for both years to get exact mid-year calculation
+    """
+    years = target_year - creation_year
+    # Convert percentage to decimal
+    rate = inflation_rate / 100
+    return initial_value * math.pow(1 + rate, years)
 
 @bp.route('', methods=['POST'])
 def create_goal():
     data = request.get_json()
     
-    try:
-        month, year = parse_month_year(data['target_date'])
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 400
-    
     goal = Goal(
-        type=data['type'],
         name=data['name'],
-        target_amount=data['target_amount'],
-        current_value=data['current_value'],
-        target_month=month,
-        target_year=year,
-        expected_inflation=data['expected_inflation']
+        icon=data['icon'],
+        goal_creation_year=data['goal_creation_year'],
+        target_year=data['target_year'],
+        projected_inflation=data['projected_inflation'],
+        initial_goal_value=data['initial_goal_value']
     )
     
     db.session.add(goal)
@@ -48,12 +42,20 @@ def get_goals():
     goals = Goal.query.all()
     return jsonify([{
         'id': goal.id,
-        'type': goal.type,
         'name': goal.name,
-        'target_amount': goal.target_amount,
-        'current_value': goal.current_value,
-        'target_date': f"{goal.target_year}-{goal.target_month:02d}",
-        'expected_inflation': goal.expected_inflation
+        'icon': goal.icon,
+        'goal_creation_year': goal.goal_creation_year,
+        'target_year': goal.target_year,
+        'projected_inflation': goal.projected_inflation,
+        'initial_goal_value': goal.initial_goal_value,
+        'projected_value': calculate_projected_value(
+            goal.initial_goal_value,
+            goal.projected_inflation,
+            goal.goal_creation_year,
+            goal.target_year
+        ),
+        'created_at': goal.created_at.isoformat(),
+        'updated_at': goal.updated_at.isoformat()
     } for goal in goals])
 
 @bp.route('/<int:id>', methods=['GET'])
@@ -61,12 +63,20 @@ def get_goal(id):
     goal = Goal.query.get_or_404(id)
     return jsonify({
         'id': goal.id,
-        'type': goal.type,
         'name': goal.name,
-        'target_amount': goal.target_amount,
-        'current_value': goal.current_value,
-        'target_date': f"{goal.target_year}-{goal.target_month:02d}",
-        'expected_inflation': goal.expected_inflation
+        'icon': goal.icon,
+        'goal_creation_year': goal.goal_creation_year,
+        'target_year': goal.target_year,
+        'projected_inflation': goal.projected_inflation,
+        'initial_goal_value': goal.initial_goal_value,
+        'projected_value': calculate_projected_value(
+            goal.initial_goal_value,
+            goal.projected_inflation,
+            goal.goal_creation_year,
+            goal.target_year
+        ),
+        'created_at': goal.created_at.isoformat(),
+        'updated_at': goal.updated_at.isoformat()
     })
 
 @bp.route('/<int:id>', methods=['PUT'])
@@ -74,18 +84,12 @@ def update_goal(id):
     goal = Goal.query.get_or_404(id)
     data = request.get_json()
     
-    goal.type = data.get('type', goal.type)
     goal.name = data.get('name', goal.name)
-    goal.target_amount = data.get('target_amount', goal.target_amount)
-    goal.current_value = data.get('current_value', goal.current_value)
-    if 'target_date' in data:
-        try:
-            month, year = parse_month_year(data['target_date'])
-            goal.target_month = month
-            goal.target_year = year
-        except ValueError as e:
-            return jsonify({'error': str(e)}), 400
-    goal.expected_inflation = data.get('expected_inflation', goal.expected_inflation)
+    goal.icon = data.get('icon', goal.icon)
+    goal.goal_creation_year = data.get('goal_creation_year', goal.goal_creation_year)
+    goal.target_year = data.get('target_year', goal.target_year)
+    goal.projected_inflation = data.get('projected_inflation', goal.projected_inflation)
+    goal.initial_goal_value = data.get('initial_goal_value', goal.initial_goal_value)
     
     db.session.commit()
     return jsonify({'message': 'Goal updated successfully'})

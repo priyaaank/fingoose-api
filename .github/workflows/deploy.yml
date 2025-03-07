@@ -93,6 +93,8 @@ jobs:
             docker run -d \
               --name mysql \
               --network=fingoose-network \
+              --character-set-server=utf8mb4 \
+              --collation-server=utf8mb4_unicode_ci \
               -e MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} \
               -e MYSQL_DATABASE=personal_finance \
               -e MYSQL_USER=${{ secrets.MYSQL_USER }} \
