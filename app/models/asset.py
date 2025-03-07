@@ -4,13 +4,11 @@ from .utils import RoundingMixin
 
 class Asset(db.Model, RoundingMixin):
     id = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.String(50), nullable=False)
     name = db.Column(db.String(100), nullable=False)
-    icon = db.Column(db.String(200))
+    icon = db.Column(db.String(10, collation='utf8mb4_unicode_ci'), nullable=False)  # For emoji
     current_value = db.Column(db.Float, nullable=False)
     projected_roi = db.Column(db.Float, nullable=False)
-    maturity_month = db.Column(db.Integer)  # 1-12, nullable
-    maturity_year = db.Column(db.Integer)   # nullable
+    maturity_year = db.Column(db.Integer, nullable=False)
     additional_comments = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -25,15 +23,22 @@ class Asset(db.Model, RoundingMixin):
 
     def to_dict(self):
         """Convert asset to dictionary with rounded values"""
+        # Get goal mappings
+        goal_mappings = [{
+            'goal_id': mapping.goal_id,
+            'goal_name': mapping.goal.name,
+            'allocation_percentage': mapping.allocation_percentage
+        } for mapping in self.mappings]
+        
         return {
             'id': self.id,
-            'type': self.type,
             'name': self.name,
             'icon': self.icon,
             'current_value': self.round_amount(self.current_value),
             'projected_roi': self.projected_roi,
-            'maturity_date': f"{self.maturity_year}-{self.maturity_month:02d}" if self.maturity_month and self.maturity_year else None,
+            'maturity_year': self.maturity_year,
             'additional_comments': self.additional_comments,
+            'goal_mappings': goal_mappings,
             'created_at': self.created_at.isoformat(),
             'updated_at': self.updated_at.isoformat()
         } 
